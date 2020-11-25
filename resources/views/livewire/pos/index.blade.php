@@ -1,11 +1,11 @@
-<div x-data="{showRegister: @entangle('showRegister')}" class="relative flex-1 w-full px-5 py-2 overflow-y-hidden">
+<div x-data="{showRegister: @entangle('showRegister')}" class="relative flex flex-col w-full h-full px-5 py-2">
     <div class="relative">
         <input wire:model="query" wire:keydown.enter="addViaBarcode" placeholder="Search for product or Scan product barcode.." autofocus type="text" class="w-full mb-2 text-xl text-primary-600 form-input">
         <i class="absolute text-3xl cursor-pointer hover:text-secondary-500 right-2 top-2 material-icons text-primary-600">point_of_sale</i>
     </div>
     <div class="flex h-full">
         <div class="w-2/5 mr-2 left">
-            <div class="w-full h-full mb-5 overflow-y-scroll bg-white rounded">
+            <div class="w-full mb-2 overflow-y-scroll bg-white rounded h-quarterscreen">
                 <div class="sticky top-0 z-10 p-2 bg-white">
                     <div class="p-1 rounded title bg-primary-600">
                         <h1 class="flex items-center"><i class="mr-1 material-icons">dns</i>Products List</h1>
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="w-3/5 h-full p-2 mb-5 ml-2 bg-white rounded right">
+        <div class="flex-grow w-3/5 p-2 mb-5 ml-2 bg-white rounded right">
             <div class="p-1 rounded title bg-primary-600">
                 <h1 class="flex items-center"><i class="mr-1 material-icons">shopping_cart</i>Products List</h1>
             </div>
@@ -96,10 +96,15 @@
                     </table>
                     </div>
                 </div>
+                <div class="flex items-center mt-4 justify-evenly text-primary-600">
+                    <button class="p-3 font-semibold bg-yellow-300 rounded-md hover:text-white">HOLD</button>
+                    <button class="p-3 font-semibold bg-yellow-300 rounded-md hover:text-white">HOLD</button>
+                    <button class="p-3 font-semibold bg-yellow-300 rounded-md hover:text-white">HOLD</button>
+                </div>
             </div>
         </div>
     </div>
-    <div x-show.transition="showRegister" class="absolute inset-0 z-20 flex items-center justify-center bg-opacity-50 bg-primary-500">
+    <div x-cloak x-show.transition="showRegister" class="absolute inset-0 z-20 flex items-center justify-center bg-opacity-50 bg-primary-500">
         <div @click.away="showRegister=false"  class="bg-white w-halfscreen text-primary-600">
             <div class="p-5">
                 <h1 class="font-semibold border-b-2 border-primary-600">Register new customer</h1>

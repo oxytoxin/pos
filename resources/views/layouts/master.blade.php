@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('body')
-<div class="flex flex-col w-full h-screen text-white bg-gray-200">
+<div class="flex flex-col w-full min-h-screen text-white bg-gray-200">
     <header class="w-full py-3 bg-primary-600">
         <div class="container flex items-center justify-between px-5 mx-auto">
             <div class="left">
