@@ -12,7 +12,7 @@
                     </div>
                     <div class="p-1 my-2 text-primary-600">
                         <label for="category">Category</label>
-                        <select name="category" wire:model="selected_category" class="w-full max-h-32 form-select" size="1" id="category">
+                        <select wire:change="resetPage()" name="category" wire:model="selected_category" class="w-full max-h-32 form-select" size="1" id="category">
                             <option value="0">All Products</option>
                             @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ ucfirst($category->name) }}</option>
