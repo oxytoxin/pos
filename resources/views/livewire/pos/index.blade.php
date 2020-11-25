@@ -131,4 +131,9 @@
             </div>
         </div>
     </div>
+    <div wire:loading wire:target="newInvoice,registerCustomer,updateCustomer,addProduct,addViaBarcode,filterCategory">
+        <div  class="fixed inset-0 z-30 flex items-center justify-center bg-opacity-50 bg-primary-500">
+            <i style="font-size: 5rem" class="fa fa-pulse text-primary-600 fa-spinner"></i>
+        </div>
+    </div>
 </div>
