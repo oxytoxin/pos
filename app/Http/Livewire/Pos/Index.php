@@ -11,9 +11,11 @@ use App\Models\Category;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
 
     public $cashier;
     protected $products;
@@ -50,12 +52,12 @@ class Index extends Component
         ])->get();
         if ($this->query) {
             if ($this->selected_category)
-                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->orWhere('barcode', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(10);
-            else $this->products = Product::where('name', 'like', "%$this->query%")->orWhere('barcode', 'like', "%$this->query%")->withBrandName()->withImageUrl()->paginate(10);
+                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->orWhere('barcode', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(12);
+            else $this->products = Product::where('name', 'like', "%$this->query%")->orWhere('barcode', 'like', "%$this->query%")->withBrandName()->withImageUrl()->paginate(12);
         } else {
             if ($this->selected_category)
-                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(10);
-            else $this->products = Product::withBrandName()->withImageUrl()->paginate(10);
+                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(12);
+            else $this->products = Product::withBrandName()->withImageUrl()->paginate(12);
         }
         return view('livewire.pos.index', [
             'products' => $this->products,

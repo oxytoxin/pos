@@ -20,7 +20,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="inline-block px-2 pb-15">
+                <div class="inline-block px-2 pb-5">
                     <div class="grid w-full grid-cols-2 gap-2 my-2 xl:grid-cols-3">
                         @forelse ($products as $product)
                         <div wire:click="addProduct({{ $product->id }})" class="relative flex flex-col items-center duration-150 transform cursor-pointer hover:scale-105 min-h-40 min-w-32 bg-primary-500">
@@ -36,6 +36,9 @@
                             <h1 class="text-center text-primary-600">No products found.</h1>
                         @endforelse
                     </div>
+                </div>
+                <div class="flex w-full mb-5 overflow-x-auto">
+                    {{ $products->links('vendor.livewire.tailwind') }}
                 </div>
             </div>
         </div>
