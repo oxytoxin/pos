@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'welcome')->name('home');
-Route::get('/pos', Index::class)->middleware(['isCashier', 'auth']);
+Route::get('/pos', Index::class)->middleware(['auth', 'isCashier']);
 
 Route::middleware('guest')->group(function () {
     Route::get('login', Login::class)

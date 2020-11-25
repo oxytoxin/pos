@@ -12,7 +12,7 @@
                     </div>
                     <div class="p-1 my-2 text-primary-600">
                         <label for="category">Category</label>
-                        <select wire:change="filterCategory" name="category" wire:model="selected_category" class="w-full max-h-32 form-select" size="1" id="category">
+                        <select name="category" wire:model="selected_category" class="w-full max-h-32 form-select" size="1" id="category">
                             <option value="0">All Products</option>
                             @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ ucfirst($category->name) }}</option>
@@ -25,10 +25,10 @@
                         @forelse ($products as $product)
                         <div wire:click="addProduct({{ $product->id }})" class="relative flex flex-col items-center duration-150 transform cursor-pointer hover:scale-105 min-h-40 min-w-32 bg-primary-500">
                             <div class="w-20 h-20 mt-2">
-                                <img src="{{ $product->image->url }}" alt="default" class="object-cover w-full">
+                                <img src="{{ $product->image_url }}" alt="default" class="object-cover w-full">
                             </div>
                             <h1 class="px-2 mt-1 text-xs font-semibold leading-tight text-center uppercase">{{ $product->name }}</h1>
-                            <h1 class="px-2 mt-1 text-xs font-semibold leading-tight text-center text-gray-500 uppercase">{{ $product->brand->name }}</h1>
+                            <h1 class="px-2 mt-1 text-xs font-semibold leading-tight text-center text-gray-500 uppercase">{{ $product->brand_name }}</h1>
                             <h1 class="mb-10 text-xs leading-tight text-center">&#8369; {{ number_format($product->price,2) }}</h1>
                             <h1 class="absolute bottom-0 left-0 p-1 text-xs leading-tight bg-secondary-500">In stock: {{ $product->stock }}</h1>
                         </div>
@@ -47,7 +47,7 @@
                 <h1 class="flex items-center border-2 rounded-lg border-primary-600"><i class="mx-2 border-r-2 border-primary-600 material-icons">person</i>
                         <select wire:model="customer_id" wire:change="updateCustomer" name="customer" id="customer" class="border-0 cursor-pointer form-select">
                             @foreach ($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->user->name }}</option>
+                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                             @endforeach
                         </select>
                     <i wire:click="$set('showRegister',true)" class="mx-2 border-l-2 cursor-pointer hover:text-green-500 border-primary-600 material-icons">person_add</i></h1>
@@ -79,7 +79,7 @@
                             <td class="px-6 py-4 text-sm text-center whitespace-no-wrap">&#8369; {{ $product->price }}</td>
                             <td class="px-6 py-4 text-sm text-center">{{ $product->pivot->discount }}</td>
                             <td class="px-6 py-4 text-sm text-center">{{ $product->pivot->tax }}</td>
-                            <td class="px-6 py-4 text-sm text-center whitespace-no-wrap">&#8369; {{ $product->pivot->total }}</td>
+                            <td class="px-6 py-4 text-sm text-center whitespace-no-wrap">&#8369; {{ $product->total }}</td>
                         </tr>
                         @empty
                         <tr>
@@ -136,7 +136,7 @@
             </div>
         </div>
     </div>
-    <div wire:loading wire:target="newInvoice,registerCustomer,updateCustomer,addProduct,addViaBarcode,filterCategory">
+    <div wire:loading wire:target="newInvoice,registerCustomer,updateCustomer,addProduct,addViaBarcode">
         <div  class="fixed inset-0 z-30 flex items-center justify-center bg-opacity-50 bg-primary-500">
             <i style="font-size: 5rem" class="fa fa-pulse text-primary-600 fa-spinner"></i>
         </div>

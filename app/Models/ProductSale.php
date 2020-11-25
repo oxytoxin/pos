@@ -19,10 +19,7 @@ class ProductSale extends Pivot
      */
     public $incrementing = true;
 
-    public function getTotalAttribute()
-    {
-        return $this->product->price * $this->quantity;
-    }
+
 
     public function product()
     {

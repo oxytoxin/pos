@@ -14,7 +14,7 @@ class ProductsSeeder extends Seeder
      */
     public function run()
     {
-        Product::factory(10000)->create()->each(function ($p) {
+        Product::factory(2000)->create()->each(function ($p) {
             $p->image()->create([
                 'url' => 'https://picsum.photos/200'
             ]);

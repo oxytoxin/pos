@@ -17,9 +17,7 @@ class IsCashier
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check()) {
-            if (!auth()->user()->roles->contains(3)) return redirect('/');
-        }
+        if (!auth()->user()->roles->contains(3)) return redirect('/');
         return $next($request);
     }
 }

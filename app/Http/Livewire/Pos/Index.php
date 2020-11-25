@@ -16,7 +16,7 @@ class Index extends Component
 {
 
     public $cashier;
-    public $products;
+    protected $products;
     public $query = "";
     public $categories;
     public $selected_category = 0;
@@ -34,9 +34,8 @@ class Index extends Component
 
     public function mount()
     {
-        $this->products = Product::all();
-        $this->customers = Customer::all();
-        $this->categories = Category::all();
+
+        $this->categories = Category::get();
         $this->customer = Customer::find($this->customer_id);
         $this->cashier = auth()->user()->cashier;
         $pendingSale = $this->cashier->sales->where('status', 'pending')->first();
@@ -46,24 +45,24 @@ class Index extends Component
 
     public function render()
     {
+        $this->customers = Customer::addSelect([
+            'name' => User::select('name')->whereColumn('id', 'user_id')->limit(1)
+        ])->get();
         if ($this->query) {
             if ($this->selected_category)
-                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->orWhere('barcode', 'like', "%$this->query%")->where('category_id', $this->selected_category)->get();
-            else $this->products = Product::where('name', 'like', "%$this->query%")->orWhere('barcode', 'like', "%$this->query%")->get();
+                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->orWhere('barcode', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(10);
+            else $this->products = Product::where('name', 'like', "%$this->query%")->orWhere('barcode', 'like', "%$this->query%")->withBrandName()->withImageUrl()->paginate(10);
         } else {
             if ($this->selected_category)
-                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->get();
-            else $this->products = Product::all();
+                $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(10);
+            else $this->products = Product::withBrandName()->withImageUrl()->paginate(10);
         }
-        return view('livewire.pos.index')
+        return view('livewire.pos.index', [
+            'products' => $this->products,
+        ])
             ->extends('layouts.master');
     }
 
-    public function filterCategory()
-    {
-        if ($this->selected_category) $this->products = Category::find($this->selected_category)->products;
-        else $this->products = Product::all();
-    }
 
     public function addViaBarcode()
     {
@@ -82,7 +81,7 @@ class Index extends Component
                         'quantity' => $this->sale->products->find($product)->pivot->quantity + 1,
                     ]);
                 } else $this->sale->products()->attach($product->id);
-                $this->sale = Sale::find($this->sale->id);
+                $this->sale = Sale::with('products')->find($this->sale->id);
                 $this->query = "";
                 $this->dispatchBrowserEvent('success', ['message' => 'Product added!']);
             } else {
@@ -110,7 +109,7 @@ class Index extends Component
                 'quantity' => $this->sale->products->find($product)->pivot->quantity + 1,
             ]);
         } else $this->sale->products()->attach($product->id);
-        $this->sale = Sale::find($this->sale->id);
+        $this->sale = Sale::with('products')->find($this->sale->id);
         $this->dispatchBrowserEvent('success', ['message' => 'Product added!']);
     }
 
@@ -157,7 +156,6 @@ class Index extends Component
         $this->customer_name = "";
         $this->customer_phone = "";
         $this->customer_email = "";
-        $this->customers = Customer::all();
         $this->customer_id = $c->id;
         $this->updateCustomer();
     }

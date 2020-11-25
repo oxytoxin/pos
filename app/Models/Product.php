@@ -39,4 +39,18 @@ class Product extends Model
     {
         return $this->morphOne(Image::class, 'imageable');
     }
+
+    public function getTotalAttribute()
+    {
+        return $this->price * $this->pivot->quantity;
+    }
+
+    public function scopeWithImageUrl($query)
+    {
+        $query->addSelect(['image_url' => Image::select('url')->whereColumn('imageable_id', 'products.id')->where('imageable_type', 'App\\Models\\Product')->limit(1)]);
+    }
+    public function scopeWithBrandName($query)
+    {
+        $query->addSelect(['brand_name' => Brand::select('name')->whereColumn('id', 'brand_id')->limit(1)]);
+    }
 }
