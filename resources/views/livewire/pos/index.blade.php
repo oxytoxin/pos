@@ -53,7 +53,7 @@
                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                             @endforeach
                         </select>
-                    <i wire:click="$set('showRegister',true)" class="mx-2 border-l-2 cursor-pointer hover:text-green-500 border-primary-600 material-icons">person_add</i></h1>
+                    <i wire:click="showRegister" class="mx-2 border-l-2 cursor-pointer hover:text-green-500 border-primary-600 material-icons">person_add</i></h1>
                 <button onclick="confirm('Discard current transaction?')||event.stopImmediatePropagation()" wire:click="newInvoice" class="p-2 font-semibold text-white uppercase bg-primary-600 hover:text-primary-500">New Invoice</button>
             </div>
             <div class="w-full p-1 mt-3">
@@ -99,13 +99,25 @@
                     </table>
                     </div>
                 </div>
-                <div class="flex items-center mt-4 justify-evenly text-primary-600">
-                    <button class="p-3 font-semibold bg-yellow-300 rounded-md hover:text-white">HOLD</button>
-                    <button class="p-3 font-semibold bg-yellow-300 rounded-md hover:text-white">HOLD</button>
-                    <button class="p-3 font-semibold bg-yellow-300 rounded-md hover:text-white">HOLD</button>
+                <div style="display: grid; grid-gap: 1rem; grid-template-columns: repeat(auto-fit,minmax(0,1fr));" class="mt-4 text-primary-600">
+                    <div>
+                        <h1>Quantity: {{ $sale ? $sale->quantity : 0 }}</h1>
+                        <button class="w-full p-3 font-semibold bg-red-400 rounded-md hover:text-white">HOLD</button>
+                    </div>
+                    <div>
+                        <h1>Total: &#8369; {{ $sale ? number_format($sale->total,2) : '0.0' }}</h1>
+                        <button class="w-full p-3 font-semibold bg-yellow-300 rounded-md hover:text-white">CHECKOUT</button>
+                    </div>
+                    <div>
+                        <h1><br></h1>
+                        <button class="w-full p-3 font-semibold bg-green-400 rounded-md hover:text-white">CHECKOUT AND PRINT</button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div x-cloak wire:offline class="absolute inset-0 z-20 flex items-center justify-center bg-opacity-50 bg-primary-500">
+            <h1 class="text-xl text-center text-red-600">Oops! You are offline.</h1>
     </div>
     <div x-cloak x-show.transition="showRegister" class="absolute inset-0 z-20 flex items-center justify-center bg-opacity-50 bg-primary-500">
         <div @click.away="showRegister=false"  class="bg-white w-halfscreen text-primary-600">
@@ -139,7 +151,7 @@
             </div>
         </div>
     </div>
-    <div wire:loading wire:target="newInvoice,registerCustomer,updateCustomer,addProduct,addViaBarcode">
+    <div wire:loading wire:target="newInvoice, showRegister, registerCustomer,updateCustomer,addProduct,addViaBarcode">
         <div  class="fixed inset-0 z-30 flex items-center justify-center bg-opacity-50 bg-primary-500">
             <i style="font-size: 5rem" class="fa fa-pulse text-primary-600 fa-spinner"></i>
         </div>

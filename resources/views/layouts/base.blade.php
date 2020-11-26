@@ -19,20 +19,23 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ url(mix('css/app.css')) }}">
+        <link rel="stylesheet" href="{{ asset('/icofont/icofont.min.css') }}">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         @livewireStyles
 
         <!-- Scripts -->
         <script src="{{ url(mix('js/app.js')) }}" defer></script>
-        {{-- <script src="{{ url(mix('js/tblinks.js')) }}" defer></script> --}}
+        <script src="{{ url(mix('js/tblinks.js')) }}" defer></script>
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
     <body>
         @yield('body')
-
+        <footer class="w-full">
+            <div class="py-3 text-center text-white bg-primary-600">&copy; J7 IT SOLUTIONS 2020</div>
+        </footer>
         @livewireScripts
         <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js" data-turbolinks-eval="false"></script>
         @stack('scripts')

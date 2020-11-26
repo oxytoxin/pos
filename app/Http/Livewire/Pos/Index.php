@@ -25,7 +25,7 @@ class Index extends Component
     public $sale;
     public $customer_id = 1;
     public $customer;
-    public $customers;
+    protected $customers;
 
 
     // new customer properties
@@ -36,7 +36,6 @@ class Index extends Component
 
     public function mount()
     {
-
         $this->categories = Category::get();
         $this->customer = Customer::find($this->customer_id);
         $this->cashier = auth()->user()->cashier;
@@ -47,9 +46,6 @@ class Index extends Component
 
     public function render()
     {
-        $this->customers = Customer::addSelect([
-            'name' => User::select('name')->whereColumn('id', 'user_id')->limit(1)
-        ])->get();
         if ($this->query) {
             if ($this->selected_category)
                 $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->orWhere('barcode', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(12);
@@ -59,12 +55,20 @@ class Index extends Component
                 $this->products = Product::where('name', 'like', "%$this->query%")->where('category_id', $this->selected_category)->withBrandName()->withImageUrl()->paginate(12);
             else $this->products = Product::withBrandName()->withImageUrl()->paginate(12);
         }
+        $this->customers = Customer::addSelect([
+            'name' => User::select('name')->whereColumn('id', 'user_id')->limit(1)
+        ])->get()->sortBy('name');
         return view('livewire.pos.index', [
             'products' => $this->products,
+            'customers' => $this->customers,
         ])
             ->extends('layouts.master');
     }
 
+    public function showRegister()
+    {
+        $this->showRegister = true;
+    }
 
     public function addViaBarcode()
     {
@@ -97,6 +101,31 @@ class Index extends Component
             return false;
         }
     }
+
+    public function updatedQuery($value)
+    {
+        if (strlen($value) == 13) {
+            $product = Product::where('barcode', $this->query)->first();
+            if ($product) {
+                if (!$this->sale) {
+                    $this->sale = Sale::create([
+                        'reference_no' => time() . auth()->user()->phone,
+                        'customer_id' => $this->customer_id,
+                        'cashier_id' => auth()->user()->cashier->id,
+                    ]);
+                }
+                if ($this->sale->products->contains($product)) {
+                    $this->sale->products->find($product)->pivot->update([
+                        'quantity' => $this->sale->products->find($product)->pivot->quantity + 1,
+                    ]);
+                } else $this->sale->products()->attach($product->id);
+                $this->sale = Sale::with('products')->find($this->sale->id);
+                $this->query = "";
+                $this->dispatchBrowserEvent('success', ['message' => 'Product added!']);
+            }
+        }
+    }
+
     public function addProduct(Product $product)
     {
         if (!$this->sale) {

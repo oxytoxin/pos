@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $u->id
             ]);
         }
-        for ($i = 1; $i < 11; $i++) {
+        for ($i = 1; $i < 1001; $i++) {
             $u = User::factory()->create(['username' => "customer00$i"]);
             $u->roles()->attach(2);
             Customer::create([

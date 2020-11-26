@@ -18,8 +18,8 @@ class CreateProductSaleTable extends Migration
             $table->foreignId('sale_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete(null)->onUpdate('cascade');
             $table->integer('quantity')->default(1);
-            $table->integer('tax')->nullable()->default(null);
-            $table->integer('discount')->nullable()->default(null);
+            $table->integer('tax')->default(0);
+            $table->integer('discount')->default(0);
             $table->foreignId('tax_type_id')->nullable()->default(null)->constrained();
             $table->foreignId('discount_type_id')->nullable()->default(null)->constrained();
             $table->timestamps();
